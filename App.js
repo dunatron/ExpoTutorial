@@ -1,4 +1,8 @@
+import "react-native-gesture-handler";
 import React, { useState } from "react";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+
 import {
   StyleSheet,
   Text,
@@ -8,51 +12,39 @@ import {
   TextInput,
   Button
 } from "react-native";
+// Screens
+import HomeScreen from "./screens/HomeScreen";
+import DetailsScreen from "./screens/DetailsScreen";
+import GoalsScreen from "./screens/GoalsScreen";
+import ChatsScreen from "./screens/ChatsScreen";
 
-import GoalItem from "./components/GoalItem";
-import GoalInput from "./components/GoalInput";
-
-export default function App() {
-  const [courseGoals, setCourseGoals] = useState([]);
-  const addGoalHandler = goalTitle => {
-    setCourseGoals(currentGoals => [
-      ...currentGoals,
-      {
-        id: Math.random().toString(),
-        value: goalTitle
+const AppNavigator = createStackNavigator(
+  {
+    Home: {
+      screen: HomeScreen
+    },
+    Details: DetailsScreen,
+    GoalsScreen: GoalsScreen,
+    ChatsScreen: ChatsScreen
+  },
+  {
+    initialRouteName: "Home",
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: "#f4511e"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
       }
-    ]);
-  };
-  const removeGoalHandler = goalId => {
-    setCourseGoals(currentGoals => {
-      return currentGoals.filter(goal => goal.id !== goalId);
-    });
-  };
-  return (
-    <View style={styles.screen}>
-      <GoalInput onAddGoal={addGoalHandler} />
-      {/* <ScrollView>
-        {courseGoals.map((goal, idx) => (
-          <View key={idx} style={styles.listItem}>
-            <Text>{goal}</Text>
-          </View>
-        ))}
-      </ScrollView> */}
-      <FlatList
-        keyExtractor={(item, index) => item.id}
-        data={courseGoals}
-        renderItem={itemData => (
-          <GoalItem
-            id={itemData.item.id}
-            text={itemData.item.value}
-            onDelete={() => removeGoalHandler(itemData.item.id)}
-            // onDelete={removeGoalHandler}
-          />
-        )}
-      />
-    </View>
-  );
-}
+    },
+    navigationOptions: {
+      tabBarLabel: "Home!"
+    }
+  }
+);
+
+export default createAppContainer(AppNavigator);
 
 const styles = StyleSheet.create({
   screen: {
